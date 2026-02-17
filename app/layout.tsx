@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
+import "./globals.css";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -8,19 +8,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <title>Mohit Next.js Course</title>
       </head>
       <body>
-        <header style={{padding:12, background:"#a69e9e"}}>
+        <header style={{ padding: 12, background: "#467dfd" }}>
           My App Navbar
-          <nav style={{display:"flex", gap:12}}>
-            <Link href="/">Home</Link>
-            <Link href="/about">About</Link>
-            <Link href="/contact">Contact</Link>
-            <Link href="/dashboard">DashBoard</Link>
-            <Link href="/blog">Blog</Link>
-            <Link href="/products">Products</Link>
-          </nav>
-          </header>
+        </header>
         {children}
-        <footer style={{padding:12, background:"#a69e9e"}}>My Footer</footer>
+        <footer style={{ padding: 12, background: "#467dfd" }}>
+          My Footer
+        </footer>
       </body>
     </html>
   );

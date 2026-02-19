@@ -1,21 +1,23 @@
-import Image from 'next/image'
-import { Inter } from "next/font/google";
+import Counter from './components/Counter';
+import Link from 'next/link';
 
-const inter = Inter({ 
-  subsets: ["latin"]
-});
-export default function Home() {
+export default async function Home() {
+
+    const data = await fetch('https://jsonplaceholder.typicode.com/posts')
+    .then(response => response.json())
     return(
-       <main style={{padding: "40px"}}>
-        <p className={inter.className}>This is Main Component</p>
-
-        <Image
-        src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
-        alt='Hero Image'
-        width={300}
-        height={300}
-        // priority
-        />
-       </main>
+        <div>
+            <h1>Server Comp</h1>
+            <Link href= "/sever-client-demo">Go to Server Client Demo</Link>
+            {/* <ul>
+                {data.map(item => (
+                    <li key={item.id}>
+                        <h2>{item.title}</h2>
+                        <p>{item.body}</p>
+                    </li>
+                ))}
+            </ul> */}
+            {/* <Counter /> */}
+        </div>
     )
 }

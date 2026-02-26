@@ -1,42 +1,35 @@
-import { log } from "console";
+import type { Metadata } from 'next'
 
-interface BlogPageProps {
-    params: {
-        slug: string;
+type Props = {
+    params: Promise<{ slug: string }>
+}
+
+async function getPostData(slug: string) {
+    return{
+        title: `Post about ${slug}`,
+        description : `This is a post about ${slug}`
+    };
+}
+
+//Dynamic SEO
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { slug } = await params;
+
+    const post = await getPostData(slug);
+
+    return{
+        title: post.title,
+        description: post.description,
+        openGraph:{
+            title: post.title,
+            description: post.description
+        }
     }
 }
 
-const blogData : Record<string, {title: string, content: string}> = {
-    "nextjs":{
-        title: "NextJS Basic",
-        content: "NextJS is a React framework for production. It makes building full-stack React apps and sites a breeze."
-    },
-    "react":{
-        title: "React Basic",
-        content: "React is a JavaScript library for building user interfaces. It is maintained by Facebook and a community of individual developers and companies."
-    },
-    "node":{
-        title: "Node Basic",
-        content: "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows developers to run JavaScript on the server side."
-    },
-};
+//Page Content
+export default async function PostPage({ params }: Props) {
+    const { slug } = await params;
 
-export default async function BlogDetailPage({params}: BlogPageProps) {
-    const {slug} = await params;
-
-    const blog = blogData[slug];
-
-    if(!blog) {
-        return <h1>Blog not found</h1>
-    }
-    console.log(blog);
-    return(
-        <div>
-            <h1>{blog.title}</h1>
-            <p>{blog.content}</p>
-            <p>
-                Slug URL: {slug}
-            </p>
-        </div>
-    )
+    return <h1>Blog: {slug}</h1>
 }

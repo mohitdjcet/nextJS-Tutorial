@@ -1,27 +1,26 @@
-import Link from "next/link";
-import type { ReactNode } from "react";
+import type { Metadata } from 'next';
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export const metadata: Metadata = {
+  title:{
+    default: "Mohit Decodes",
+    template: "%s | Mohit Decodes"
+  },
+  description: "Learn Web Development, Programming, and Tech with Mohit Decodes. Explore tutorials, guides, and insights to enhance your coding skills and stay updated with the latest in technology.",
+  openGraph:{
+    siteName: "Mohit Decodes",
+  }
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en">
-      <head>
-        <title>Mohit Next.js Course</title>
-      </head>
       <body>
-        <header style={{padding:12, background:"#a69e9e"}}>
-          My App Navbar
-          <nav style={{display:"flex", gap:12}}>
-            <Link href="/">Home</Link>
-            <Link href="/about">About</Link>
-            <Link href="/contact">Contact</Link>
-            <Link href="/dashboard">DashBoard</Link>
-            <Link href="/blog">Blog</Link>
-            <Link href="/products">Products</Link>
-          </nav>
-          </header>
         {children}
-        <footer style={{padding:12, background:"#a69e9e"}}>My Footer</footer>
       </body>
     </html>
-  );
+  )
 }

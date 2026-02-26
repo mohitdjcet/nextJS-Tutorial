@@ -1,35 +1,51 @@
-import type { Metadata } from 'next'
+import { getPostBySlug } from "@/lib/posts";
+import type { Metadata } from "next";
 
 type Props = {
-    params: Promise<{ slug: string }>
-}
+  params: Promise<{ slug: string }>;
+};
 
-async function getPostData(slug: string) {
-    return{
-        title: `Post about ${slug}`,
-        description : `This is a post about ${slug}`
-    };
-}
-
-//Dynamic SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { slug } = await params;
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
-    const post = await getPostData(slug);
+  if (!post) {
+    return {
+      title: "Post Not Found",
+      description: "This blog post does not exist.",
+    };
+  }
 
-    return{
-        title: post.title,
-        description: post.description,
-        openGraph:{
-            title: post.title,
-            description: post.description
-        }
-    }
+  return {
+    title: post.title,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      images: ["/og-image.png"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: ["/og-image.png"],
+    },
+  };
 }
 
-//Page Content
 export default async function PostPage({ params }: Props) {
-    const { slug } = await params;
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
-    return <h1>Blog: {slug}</h1>
+  if (!post) {
+    return <h1>Post Not Found</h1>;
+  }
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <p>{post.description}</p>
+      <div>{post.content}</div>
+    </article>
+  );
 }

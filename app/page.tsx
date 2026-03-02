@@ -48,6 +48,21 @@ export default function HomePage() {
         getPosts();
     }
 
+    async function putPost() {
+        await fetch(`/api/posts/${id}`,{
+            method: "PUT",
+            headers:{
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({title, content}),
+        })
+
+        setId("");
+        setTitle("");
+        setContent("");
+        getPosts();
+    }
+
     useEffect(() => {
         getPosts();
     },[]);
@@ -60,7 +75,7 @@ export default function HomePage() {
 
             <div style={{marginTop:20}}>
                 <input
-                    placeholder="ID(For PATCH)"
+                    placeholder="ID(For PATCH and PUT)"
                     value={id}
                     onChange={(e) => setId(e.target.value)}
                 />
@@ -80,6 +95,7 @@ export default function HomePage() {
                 <div style={{marginTop:10}}>
                     <button onClick={createPost}>POST</button>
                     <button onClick={patchPost}>PATCH</button>
+                    <button onClick={putPost}>PUT</button>
                 </div>
             </div>
             <pre>{JSON.stringify(posts, null, 2)}</pre>

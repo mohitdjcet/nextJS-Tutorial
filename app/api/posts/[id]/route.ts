@@ -83,3 +83,28 @@ export async function PUT(
         status: 200,
     });
 }
+
+//DELETE API based on ID
+export async function DELETE(
+    request: Request,
+    {params}: {params: Promise<{id: string}>}
+){
+    const {id} = await params;
+    const postId = Number(id);
+
+    const postIndex = posts.findIndex((post) => post.id === postId);
+
+     if(postIndex === -1){
+        return NextResponse.json({message: "Post not found"}, {status: 404});
+    }
+
+    //remove post from array
+    const deletedPost = posts.splice(postIndex, 1);
+
+    return NextResponse.json({
+        message: "Post deleted successfully",
+        data: deletedPost[0],
+    },{
+        status: 200,
+    })
+}

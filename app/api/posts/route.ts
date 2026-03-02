@@ -1,23 +1,5 @@
 import { NextResponse } from "next/server";
-
-let posts = [
-  {
-    id: 1,
-    title: "Learn Next.js",
-    content: "Next.js is a React framework for production.",
-  },
-  {
-    id: 2,
-    title: "Learn React.js",
-    content: "React.js is a JavaScript library for building user interfaces.",
-  },
-  {
-    id: 3,
-    title: "Learn JavaScript",
-    content:
-      "JavaScript is a programming language that allows you to implement complex features on web pages.",
-  },
-];
+import { posts } from "@/lib/posts";
 
 //GET API route
 export async function GET() {
@@ -36,10 +18,7 @@ export async function POST(request: Request) {
 
     posts.push(newPost);
     
-    return NextResponse.json({
-        message: "Post created successfully",
-        data: body,
-    },{
+    return NextResponse.json(newPost,{
         status: 201,
     });
 }

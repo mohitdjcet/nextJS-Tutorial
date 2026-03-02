@@ -12,15 +12,16 @@ export default function HomePage() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [id, setId] = useState("");
 
     async function getPosts() {
-        const res = await fetch("http://localhost:3000/api/posts");
+        const res = await fetch("/api/posts");
         const data = await res.json();
         setPosts(data);
     }
 
     async function createPost() {
-        const res = await fetch("http://localhost:3000/api/posts",{
+        const res = await fetch("/api/posts",{
             method: "POST",
             headers:{
                 "Content-Type": "application/json",
@@ -33,17 +34,37 @@ export default function HomePage() {
         getPosts();
     }
 
+    async function patchPost() {
+        await fetch(`/api/posts/${id}`,{
+            method: "PATCH",
+            headers:{
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({title}),
+        })
+
+        setId("");
+        setTitle("");
+        getPosts();
+    }
+
     useEffect(() => {
         getPosts();
     },[]);
 
     return (
         <div style={{padding:20}}>
-            <h1>GET & POST API</h1>
+            <h1>GET, PATCH & POST API</h1>
 
             <button onClick={getPosts}>GET Posts</button>
 
             <div style={{marginTop:20}}>
+                <input
+                    placeholder="ID(For PATCH)"
+                    value={id}
+                    onChange={(e) => setId(e.target.value)}
+                />
+                <br />
                 <input
                     placeholder="Title"
                     value={title}
@@ -58,6 +79,7 @@ export default function HomePage() {
                 <br />
                 <div style={{marginTop:10}}>
                     <button onClick={createPost}>POST</button>
+                    <button onClick={patchPost}>PATCH</button>
                 </div>
             </div>
             <pre>{JSON.stringify(posts, null, 2)}</pre>

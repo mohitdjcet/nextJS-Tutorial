@@ -11,3 +11,16 @@ export async function GET(){
 
         return NextResponse.json(users);
 }
+
+export async function POST(req){
+    const db = await connectDB();
+
+    const body = await req.json();
+
+    const result = await db.collection("users").insertOne(body)
+
+    return NextResponse.json({
+        message: "User created Successfully",
+        data:result
+    })
+}

@@ -67,3 +67,31 @@ export async function PATCH(req) {
     data: result,
   });
 }
+
+export async function DELETE(req){
+    try{
+        const db = await connectDB();
+        const body = await req.json();
+
+        const {id} = body;
+
+        const result = await db.collection("users").deleteOne({
+            _id: new ObjectId(id)
+        });
+
+        if(result.deletedCount === 0){
+            return NextResponse.json({
+                message: "User Not found"
+            })
+        }
+
+        return NextResponse.json({
+            message:"User deleted Successfully"
+        })
+    } catch(error){
+        return NextResponse.json({
+            message:"Error deleting user",
+            error: error.message
+        })
+    }
+}

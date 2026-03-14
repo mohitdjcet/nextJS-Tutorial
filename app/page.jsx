@@ -6,13 +6,13 @@ export default function Home() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [users, setUsers] = useState([]);
+  const [editId, setEditId] = useState(null);
 
   //GET User
   const fetchUser = async () => {
     const res = await fetch("/api/users");
     const data = await res.json();
     setUsers(data.data);
-    console.log(data.data);
   };
 
   //Load Data
@@ -20,28 +20,53 @@ export default function Home() {
     fetchUser();
   }, []);
 
-  //Create User
+  //Create User or Update User
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("/api/users", {
-      method: "POST",
-      headers: {
-        "Context-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email }),
-    });
+    //Update User
+    if (editId) {
+      await fetch(`/api/users/${editId}`, {
+        method: "PUT",
+        headers: {
+          "Context-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email }),
+      });
+      alert("User Updated");
+      setEditId(null);
+      setName("");
+      setEmail("");
+      fetchUser();
+    } else {
+      //Add user
+      const res = await fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Context-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email }),
+      });
 
-    const data = await res.json();
-    console.log(data);
-    alert("User Created");
+      const data = await res.json();
+      console.log(data);
+      alert("User Created");
 
-    setName("");
-    setEmail("");
+      setName("");
+      setEmail("");
+
+      fetchUser();
+    }
+  };
+
+  const handleEdit = (user) => {
+    setName(user.name);
+    setEmail(user.email);
+    setEditId(user._id);
   };
   return (
     <div>
-      <h1>Create User</h1>
+      <h1>{editId ? "Updated User" : "Create User"}</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -63,7 +88,7 @@ export default function Home() {
         <br />
         <br />
 
-        <button type="submit">Create User</button>
+        <button type="submit">{editId ? "Update User" : "Create User"}</button>
       </form>
 
       <hr />
@@ -71,7 +96,8 @@ export default function Home() {
       <h2>Users List</h2>
       {users.map((user) => (
         <div key={user._id}>
-          {user.name}-{user.email}
+          {user.name} - {user.email}
+          <button onClick={() => handleEdit(user)}>Edit User</button>
         </div>
       ))}
     </div>

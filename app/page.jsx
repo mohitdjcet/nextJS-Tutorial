@@ -64,6 +64,16 @@ export default function Home() {
     setEmail(user.email);
     setEditId(user._id);
   };
+
+  const handleDelete = async (id)=>{
+    await fetch(`/api/users/${id}`,{
+      method:"DELETE"
+    });
+
+    alert("User Deleted");
+
+    fetchUser();
+  }
   return (
     <div>
       <h1>{editId ? "Updated User" : "Create User"}</h1>
@@ -98,6 +108,7 @@ export default function Home() {
         <div key={user._id}>
           {user.name} - {user.email}
           <button onClick={() => handleEdit(user)}>Edit User</button>
+          <button onClick={() => handleDelete(user._id)}>Delete User</button>
         </div>
       ))}
     </div>

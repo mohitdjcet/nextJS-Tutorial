@@ -27,3 +27,23 @@ export async function PUT(req,{params}){
     });
   }
 }
+
+export async function DELETE(req,{params}){
+    try{
+        await connectDB();
+
+        const {id} = await params;
+
+        const deletedUser = await User.findByIdAndDelete(id);
+
+        return NextResponse.json({
+            message:"User Deleted Successfully",
+            data:deletedUser
+        })
+    }catch (err) {
+    return NextResponse.json({
+      message: "Error deleting User",
+      error: err.message,
+    });
+  }  
+}
